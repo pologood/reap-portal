@@ -28,7 +28,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificationExecutor<Menu> {
+public interface MenuRepository extends JpaRepository<Menu, String>, JpaSpecificationExecutor<Menu> {
 
 	List<Menu> findByParent(Menu parent);
 

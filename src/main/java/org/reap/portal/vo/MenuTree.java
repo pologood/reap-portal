@@ -41,7 +41,7 @@ public class MenuTree {
 	private List<Menu> menus = new ArrayList<>();
 
 	public MenuTree(List<Menu> menus, Map<String, Function> functionMap) {
-		Map<Long, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
+		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		menus.stream().forEach(m -> {
 			if (m.getParent() != null) {
 				if (m.isLeaf()) {

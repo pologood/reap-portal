@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.reap.portal.vo.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,8 +21,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserFavFunction {
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 
 	@Column
 	private String functionCode;
@@ -41,11 +43,11 @@ public class UserFavFunction {
 		return function;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

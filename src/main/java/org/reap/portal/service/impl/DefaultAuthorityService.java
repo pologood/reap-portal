@@ -88,7 +88,7 @@ public class DefaultAuthorityService implements AuthorityService {
 	@Override
 	public List<Menu> fetchMenuTree() {
 		List<Menu> menus = menuRepository.findAll();
-		Map<Long, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
+		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		for (Menu m : menus) {
 			if (m.getParent() != null) {
 				menuMapping.get(m.getParent().getId()).addChildren(m);

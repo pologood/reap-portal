@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.reap.portal.vo.Function;
@@ -24,8 +25,9 @@ import org.reap.portal.vo.Function;
 public class UserSetting {
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 
 	@Column(unique = true, nullable = false)
 	private String userId;
@@ -51,11 +53,11 @@ public class UserSetting {
 		return homeFunction;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

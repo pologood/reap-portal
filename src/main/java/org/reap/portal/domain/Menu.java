@@ -39,6 +39,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.reap.portal.common.Constants;
 import org.reap.portal.vo.Function;
 
@@ -52,8 +53,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Menu implements Comparable<Menu> {
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 
 	@Column(nullable = false)
 	private String name;
@@ -154,12 +156,13 @@ public class Menu implements Comparable<Menu> {
 	public boolean isRoot() {
 		return null == parent;
 	}
-
-	public Long getId() {
+	
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	
+	public void setId(String id) {
 		this.id = id;
 	}
 

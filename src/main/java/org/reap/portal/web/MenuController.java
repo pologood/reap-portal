@@ -64,7 +64,7 @@ public class MenuController {
 	private AuthorityService authorityService;
 
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.POST)
-	public Result<Menu> create(@RequestBody Menu menu, @PathVariable("id") Long id) {
+	public Result<Menu> create(@RequestBody Menu menu, @PathVariable String id) {
 		validate(menu);
 		Menu parent = FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.PARENT_MENU_NOT_EXIST);
 		Assert.isTrue(!parent.isLeaf(), ErrorCodes.LEAF_MENU_CAN_NOT_BE_PARENT);
@@ -86,7 +86,7 @@ public class MenuController {
 
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.DELETE)
 	@Transactional
-	public Result<?> delete(@PathVariable Long id) {
+	public Result<?> delete(@PathVariable String id) {
 		Menu menu = FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.MENU_NOT_EXIST);
 		if (menu.isRoot()) {
 			menuRepository.deleteByParent(menu);
@@ -110,8 +110,8 @@ public class MenuController {
 	// TODO 代码冗余、后续重构
 	@Transactional
 	@RequestMapping(path = "/menu/move/{drageMenuId}/{targetMenuId}/{position}", method = RequestMethod.POST)
-	public Result<?> move(@PathVariable("drageMenuId") Long drageMenuId,
-			@PathVariable("targetMenuId") Long targetMenuId, @PathVariable("position") int position) {
+	public Result<?> move(@PathVariable("drageMenuId") String drageMenuId,
+			@PathVariable("targetMenuId") String targetMenuId, @PathVariable("position") int position) {
 		Menu targetMenu = FunctionalUtils.orElseThrow(menuRepository.findById(targetMenuId), ErrorCodes.MENU_NOT_EXIST);
 		Menu dragMenu = FunctionalUtils.orElseThrow(menuRepository.findById(drageMenuId), ErrorCodes.MENU_NOT_EXIST);
 
@@ -196,7 +196,7 @@ public class MenuController {
 	}
 
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.GET)
-	public Result<Menu> findOne(@PathVariable(name = "id") Long id) {
+	public Result<Menu> findOne(@PathVariable String id) {
 		return DefaultResult.newResult(
 				FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.MENU_NOT_EXIST));
 	}
@@ -214,7 +214,7 @@ public class MenuController {
 	@RequestMapping(path = "/menus/tree", method = RequestMethod.GET)
 	public Result<List<Menu>> menuTree() {
 		List<Menu> menus = menuRepository.findAll();
-		Map<Long, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
+		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		for (Menu m : menus) {
 			if (m.getParent() != null) {
 				menuMapping.get(m.getParent().getId()).addChildren(m);
