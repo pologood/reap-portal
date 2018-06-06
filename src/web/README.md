@@ -1,0 +1,8 @@
+
+# REAP GUI
+ 
+## Usage
+
+```bash
+$ npm start         # visit http://localhost:8000
+```

@@ -1,0 +1,71 @@
+@import '~antd/lib/style/themes/default.less';
+
+.header {
+  height: 32px;
+  padding: 0;
+  z-index: 9;
+  position: relative;
+  :global {
+    .anticon {
+      font-size: 20px;
+      color: #fff;
+      line-height: 32px;
+      cursor: pointer;
+      transition: all 0.3s, padding 0s;
+      padding: 0 6px;
+    }
+  }
+  .function {
+    color: #fff;
+    margin-left: 48px;
+    line-height: 32px;
+  }
+}
+
+.right {
+  float: right;
+  margin-right: 10px;
+  height: 100%;
+  .action {
+    cursor: pointer;
+    padding: 0 12px;
+    display: inline-block;
+    transition: all 0.3s;
+    height: 100%;
+    > i {
+      font-size: 16px;
+      vertical-align: middle;
+      color: @text-color;
+    }
+  }
+  .account {
+    margin-left: 15px;
+    line-height: 32px;
+    font-size: 20px;
+    color: #fff;
+  }
+
+  :global {
+    .ant-badge {
+      line-height: 32px;
+      font-size: 15px;
+      vertical-align: baseline;
+    }
+    .ant-badge-count {
+      top: 1px;
+      height: 16px;
+      line-height: 16px;
+    }
+    .anticon {
+      font-size: 18px;
+      color: #fff;
+      line-height: 32px;
+      cursor: pointer;
+      transition: all 0.3s, padding 0s;
+      padding: 0 6px;
+    }
+  }
+  .selected {
+    background-color: #1890ff;
+  }
+}

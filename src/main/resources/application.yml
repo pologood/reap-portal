@@ -1,0 +1,3 @@
+api:
+  logon: http://reap-facility/apis/reap-rbac/authentication/
+  fetchFunctions: http://reap-facility/apis/reap-rbac/functions/all

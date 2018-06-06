@@ -1,0 +1,10 @@
+ouip: 
+  datasource:
+    url: jdbc:h2:mem:reap
+    username:
+    password:
+    
+spring: 
+  jpa:
+    hibernate:
+      ddl-auto: create

@@ -1,0 +1,15 @@
+spring:  
+  application: 
+    name: reap-portal
+  cloud:
+    config:
+      name: reap,reap-portal
+      profile: prd
+      label: default
+      discovery:
+        serviceId: reap-facility
+        enabled: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${OUIP_EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka/}

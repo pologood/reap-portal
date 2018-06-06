@@ -1,0 +1,116 @@
+.tabContent {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  :global {
+    .ant-tabs {
+      flex: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .ant-tabs-content {
+      flex: auto;
+    }
+    .ant-spin-container {
+      height: 100%;
+    }
+  }
+
+  .loading {
+    height: 100%;
+    .frame {
+      height: 100%;
+      width: 100%;
+      display: 'block';
+      border: 0;
+    }
+  }
+}
+
+.footerTabs {
+  :global {
+    .ant-tabs-nav-wrap {
+      margin-bottom: 0;
+    }
+
+    .ant-tabs-nav-scroll {
+      // min-height: 35px;
+      background-color: #001529;
+      position: relative;
+      z-index: 999;
+    }
+    .ant-tabs-nav .ant-tabs-tab {
+      min-width: 150px;
+      margin-right: 0;
+      padding: 0 6px;
+    }
+    .ant-tabs-nav .ant-tabs-tab .anticon {
+      margin-right: 6px;
+      padding: 0;
+      padding-right: 0;
+      line-height: 28px;
+      font-size: 14px;
+      vertical-align: middle;
+      float: right;
+    }
+    .ant-tabs-nav {
+      color: rgba(255, 255, 255, 0.65);
+    }
+    .ant-tabs-nav .ant-tabs-tab-active .anticon {
+      color: rgba(255, 255, 255, 0.65);
+    }
+    .ant-tabs-nav .ant-tabs-tab .anticon:hover {
+      color: red;
+    }
+    .ant-tabs-nav .ant-tabs-tab:hover {
+      color: white;
+    }
+    .ant-tabs-ink-bar {
+      background-color: rgb(24, 144, 255);
+    }
+    .ant-tabs-nav .ant-tabs-tab-active {
+      color: white;
+      background: #50585f;
+    }
+    .ant-tabs-nav-container {
+      margin-top: 0;
+      line-height: 32px;
+      max-height: 32px;
+    }
+    .ant-tabs-bar {
+      background-color: #001529;
+      margin-top: 0;
+      border-top: 0;
+    }
+  }
+}
+
+.hiddenTab {
+  :global {
+    .ant-tabs-nav-animated {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 3s ease, visibility 3s ease;
+    }
+    .ant-tabs-nav-scroll:hover > div {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+  }
+}
+
+.closeTab {
+  position: absolute;
+  width: 47px;
+  height: 44px;
+  border: 0;
+  padding: 0;
+  right: 0;
+  z-index: 8;
+  background: url('../../assets/module_close.png');
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+}
