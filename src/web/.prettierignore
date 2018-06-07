@@ -3,4 +3,8 @@
 **/*.jpg
 **/*.png
 **/*.ejs
+**/*.eot
+**/*.svg
+**/*.ttf
+**/*.woff
 package.json

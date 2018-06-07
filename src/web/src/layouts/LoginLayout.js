@@ -65,7 +65,7 @@ class UserLayout extends React.PureComponent {
                         message: '请输入用户名!',
                       },
                     ],
-                  })(<Input prefix={<Icon type="user" />} placeholder="admin/user" />)}
+                  })(<Input prefix={<Icon type="user" />} placeholder="admin" />)}
                 </FormItem>
                 <FormItem>
                   {getFieldDecorator('password', {
@@ -75,7 +75,7 @@ class UserLayout extends React.PureComponent {
                         message: '请输入密码!',
                       },
                     ],
-                  })(<Input prefix={<Icon type="lock" />} type="password" placeholder="888888/123456" />)}
+                  })(<Input prefix={<Icon type="lock" />} type="password" placeholder="888888" />)}
                 </FormItem>
                 <FormItem>
                   <Button className={styles.submit} size="large" type="primary" htmlType="submit">

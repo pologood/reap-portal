@@ -34,7 +34,6 @@ const dynamicWrapper = (app, models, component) => {
   if (component.toString().indexOf('.then(') < 0) {
     models.forEach(model => {
       if (modelNotExisted(app, model)) {
-        console.log(model)
         // eslint-disable-next-line
         app.model(require(`../models/${model}`).default);
       }
