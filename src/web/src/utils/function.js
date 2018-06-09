@@ -10,6 +10,8 @@ export function resolveAction(func) {
     } else {
       return `/ui/${func.serviceId}/index.html#/${func.code}`;
     }
+  } else {
+    return func.action;
   }
 }
 
