@@ -203,6 +203,22 @@ export default {
         selectMenus: newSelectMenus,
       };
     },
+    changeLogoutStatus() {
+      return  {
+        ui: {
+          mainMenu: false,
+          userMenu: false,
+          sideMenu: false,
+          showUserSetting: false,
+          loaded: [],
+        },
+        mainMenus: defaultMenus,
+        selectMenus: [],
+        activeFunction: null,
+        functions: [],
+        notices: [],
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch }) {

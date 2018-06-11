@@ -18,6 +18,9 @@ export default class GlobalHeader extends PureComponent {
     this.props.dispatch({
       type: 'login/changeLogoutStatus',
     });
+    this.props.dispatch({
+      type: 'global/changeLogoutStatus',
+    });
   };
 
   handleUserSetting = () => {
