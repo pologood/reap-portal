@@ -6,7 +6,6 @@
 		<groupId>org.reap</groupId>
 		<artifactId>reap-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../ouip-parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>reap-portal</artifactId>
 	<properties>
