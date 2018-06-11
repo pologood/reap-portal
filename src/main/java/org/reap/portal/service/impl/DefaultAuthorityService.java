@@ -115,7 +115,7 @@ public class DefaultAuthorityService implements AuthorityService {
 	public Map<String, Function> fetchUserFunctions(User user) {
 		List<Function> functions = new ArrayList<Function>();
 		user.getRoles().forEach(role -> functions.addAll(role.getFunctions()));
-		Map<String, Function> functionMap = functions.stream().collect(Collectors.toMap(Function::getCode, f -> f));
+		Map<String, Function> functionMap = functions.stream().distinct().collect(Collectors.toMap(Function::getCode, f -> f));
 		return functionMap;
 	}
 	
