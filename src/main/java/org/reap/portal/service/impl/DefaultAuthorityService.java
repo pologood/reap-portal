@@ -23,12 +23,11 @@
 
 package org.reap.portal.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.reap.portal.common.Fields;
@@ -59,20 +58,20 @@ import org.springframework.web.client.RestTemplate;
  */
 @Component
 public class DefaultAuthorityService implements AuthorityService {
-
+	
 	@Autowired
 	private MenuRepository menuRepository;
-
+	
 	@Autowired
 	private UserSettingRepository userSettingRepository;
-
+	
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Value("${api.logon}")
+    RestTemplate restTemplate;
+	
+	@Value ("${api.logon}")
 	private String api_logon;
-
-	@Value("${api.fetchFunctions}")
+	
+	@Value ("${api.fetchFunctions}")
 	private String api_fetchFunctions;
 
 	@Override
@@ -80,14 +79,12 @@ public class DefaultAuthorityService implements AuthorityService {
 		LinkedMultiValueMap<String, String> request = new LinkedMultiValueMap<String, String>();
 		request.add(Fields.USER_NAME, user.getUsername());
 		request.add(Fields.PASSWORD, user.getPassword());
-		Result<User> result = restTemplate.exchange(api_logon, HttpMethod.POST,
-				new HttpEntity<MultiValueMap<String, String>>(request, null),
-				new ParameterizedTypeReference<DefaultResult<User>>() {
-				}).getBody();
+		Result<User> result = restTemplate.exchange(api_logon, HttpMethod.POST, new HttpEntity<MultiValueMap<String, String>>(request, null), 
+				new ParameterizedTypeReference<DefaultResult<User>>() {}).getBody();
 		Assert.isTrue(result.isSuccess(), result.getResponseCode(), result.getResponseMessage());
 		return result.getPayload();
 	}
-
+	
 	@Override
 	public List<Menu> fetchMenuTree() {
 		List<Menu> menus = menuRepository.findAll();
@@ -97,8 +94,8 @@ public class DefaultAuthorityService implements AuthorityService {
 				menuMapping.get(m.getParent().getId()).addChildren(m);
 			}
 		}
-		return menus.stream().filter((m) -> m.getParent() == null).sorted(
-				Comparator.comparing(Menu::getSequence)).collect(Collectors.toList());
+		return menus.stream().filter((m) -> m.getParent() == null).sorted(Comparator.comparing(Menu::getSequence)).collect(
+				Collectors.toList());
 	}
 
 	public MenuTree fetchUserMenuTree(User user) {
@@ -108,22 +105,20 @@ public class DefaultAuthorityService implements AuthorityService {
 
 	@Override
 	public List<Function> fetchFunctions() {
-		Result<List<Function>> result = restTemplate.exchange(api_fetchFunctions, HttpMethod.GET, null,
-				new ParameterizedTypeReference<DefaultResult<List<Function>>>() {
-				}).getBody();
+		Result<List<Function>> result = restTemplate.exchange(api_fetchFunctions, HttpMethod.GET, null, 
+				new ParameterizedTypeReference<DefaultResult<List<Function>>>() {}).getBody();
 		Assert.isTrue(result.isSuccess(), result.getResponseCode(), result.getResponseMessage());
 		return result.getPayload();
 	}
 
 	@Override
 	public Map<String, Function> fetchUserFunctions(User user) {
-		Set<Function> functions = new HashSet<Function>();
+		List<Function> functions = new ArrayList<Function>();
 		user.getRoles().forEach(role -> functions.addAll(role.getFunctions()));
-		Map<String, Function> functionMap = functions.stream().collect(
-				Collectors.toMap(Function::getCode, f -> f, (k, v) -> v));
+		Map<String, Function> functionMap = functions.stream().distinct().collect(Collectors.toMap(Function::getCode, f -> f));
 		return functionMap;
 	}
-
+	
 	public void setMenuRepository(MenuRepository menuRepository) {
 		this.menuRepository = menuRepository;
 	}
@@ -132,14 +127,13 @@ public class DefaultAuthorityService implements AuthorityService {
 	public UserSetting fetchUserSetting(User user) {
 		Collection<Function> functions = fetchUserFunctions(user).values();
 		UserSetting setting = userSettingRepository.findByUserId(user.getId()).orElse(null);
-		if (setting == null)
+		if(setting == null)
 			return null;
-		setting.setHomeFunction(
-				functions.stream().filter((f) -> f.getCode().equals(setting.getHomeFunctionCode())).findFirst().orElse(
-						null));
-		setting.getFavFunctions().forEach(favFunction -> favFunction.setFunction(
-				functions.stream().filter((f) -> f.getCode().equals(favFunction.getFunctionCode())).findFirst().orElse(
-						null)));
+		setting.setHomeFunction(functions.stream().filter((f) -> f.getCode().equals(setting.getHomeFunctionCode())).findFirst().orElse(null));
+		setting.getFavFunctions().forEach(
+				favFunction -> 
+					favFunction.setFunction(functions.stream().filter((f) -> f.getCode().equals(favFunction.getFunctionCode())).findFirst().orElse(null))
+				);
 		return setting;
 	}
 

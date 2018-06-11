@@ -23,6 +23,8 @@
 
 package org.reap.portal.vo;
 
+import java.util.Objects;
+
 /**
  * 
  * @author 7cat
@@ -98,6 +100,23 @@ public class Function {
 
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		if(code == null)
+			return false;
+		Function function = (Function) o;
+		return code.equals(function.getCode());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(code);
 	}
 
 }
