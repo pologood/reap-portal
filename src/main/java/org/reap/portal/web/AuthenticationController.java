@@ -40,12 +40,26 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class AuthenticationController {
-	
+
 	@Autowired
 	private SecurityService securityService;
 
+	/** @apiDefine Session 会话管理 */
+
+	/**
+	 * @api {put} /token 校验 token
+	 * @apiDescription 校验 token 是否合法
+	 * @apiName verifyToken
+	 * @apiGroup Session
+	 * @apiParam (Body) {String} token JWT token
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/token", method = RequestMethod.PUT)
-	public Result<String> logon(@RequestParam String token) {
+	public Result<String> verifyToken(@RequestParam String token) {
 		return DefaultResult.newResult(securityService.parseToken(token));
 	}
 

@@ -19,5 +19,6 @@ export default {
   },
   disableDynamicImport: true,
   publicPath: publicPath,
+  outputPath: path.resolve(__dirname, '../../target/classes/static'),
   hash: true,
 };

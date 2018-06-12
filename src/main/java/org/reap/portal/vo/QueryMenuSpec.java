@@ -44,8 +44,6 @@ import org.springframework.util.StringUtils;
  */
 public class QueryMenuSpec {
 
-	private String id;
-
 	private String name;
 
 	private Integer level;
@@ -53,14 +51,6 @@ public class QueryMenuSpec {
 	private String parentMenuId;
 
 	private String functionCode;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -104,9 +94,6 @@ public class QueryMenuSpec {
 				List<Predicate> predicate = new ArrayList<>();
 				if (!StringUtils.isEmpty(getName())) {
 					predicate.add(cb.like(root.get(Fields.NAME), "%" + getName() + "%"));
-				}
-				if (!StringUtils.isEmpty(getId())) {
-					predicate.add(cb.like(root.get(Fields.ID), "%" + getId() + "%"));
 				}
 				if (!StringUtils.isEmpty(getFunctionCode())) {
 					predicate.add(cb.like(root.get(Fields.FUNCTION_CODE), "%" + getFunctionCode() + "%"));

@@ -63,6 +63,32 @@ public class MenuController {
 	@Autowired
 	private AuthorityService authorityService;
 
+	/** @apiDefine Menu 菜单维护 */
+	
+	/**
+	 * @api {post} /menu/{id} 创建子菜单
+	 * @apiName createSubMenu
+	 * @apiGroup Menu
+	 * @apiParam (PathVariable) {String} id 父菜单 id
+	 * @apiParam (Body) {String} name 菜单名
+	 * @apiParam (Body) {String} leaf 是否为叶子节点
+	 * @apiParam (Body) {String} functionCode 对应的功能码
+	 * @apiParam (Body) {String} remark 备注
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object} payload 新建的菜单
+	 * @apiSuccess (Success) {String} payload.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiSuccess (Success) {String} payload.createTime 创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.POST)
 	public Result<Menu> create(@RequestBody Menu menu, @PathVariable String id) {
 		validate(menu);
@@ -75,6 +101,29 @@ public class MenuController {
 		return DefaultResult.newResult(menuRepository.save(menu));
 	}
 
+	/**
+	 * @api {post} /menu 创建菜单
+	 * @apiName createMenu
+	 * @apiGroup Menu
+	 * @apiParam (Body) {String} name 菜单名
+	 * @apiParam (Body) {String} leaf 是否为叶子节点
+	 * @apiParam (Body) {String} functionCode 对应的功能码
+	 * @apiParam (Body) {String} remark 备注
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object} payload 新建的菜单
+	 * @apiSuccess (Success) {String} payload.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiSuccess (Success) {String} payload.createTime 创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menu", method = RequestMethod.POST)
 	public Result<Menu> createRootMenu(@RequestBody Menu menu) {
 		validate(menu);
@@ -84,6 +133,17 @@ public class MenuController {
 		return DefaultResult.newResult(menuRepository.save(menu));
 	}
 
+	/**
+	 * @api {post} /menu/{id} 删除菜单
+	 * @apiName deleteMenu
+	 * @apiGroup Menu
+	 * @apiParam (PathVariable) {String} id 菜单 id
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.DELETE)
 	@Transactional
 	public Result<?> delete(@PathVariable String id) {
@@ -95,6 +155,30 @@ public class MenuController {
 		return DefaultResult.newResult();
 	}
 
+	/**
+	 * @api {put} /menu 更新菜单
+	 * @apiName updateMenu
+	 * @apiGroup Menu
+	 * @apiParam (Body) {String} id 菜单 id
+	 * @apiParam (Body) {String} name 菜单名
+	 * @apiParam (Body) {String} functionCode 对应的功能码
+	 * @apiParam (Body) {String} sequence 序号
+	 * @apiParam (Body) {String} remark 备注
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object} payload 新建的菜单
+	 * @apiSuccess (Success) {String} payload.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiSuccess (Success) {String} payload.createTime 创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menu", method = RequestMethod.PUT)
 	public Result<Menu> update(@RequestBody Menu menu) {
 		Menu persisted = FunctionalUtils.orElseThrow(menuRepository.findById(menu.getId()), ErrorCodes.MENU_NOT_EXIST);
@@ -107,7 +191,19 @@ public class MenuController {
 		return DefaultResult.newResult(menuRepository.save(persisted));
 	}
 
-	// TODO 代码冗余、后续重构
+	/**
+	 * @api {post} /menu/move/{dragMenuId}/{targetMenuId}/{position} 移动菜单
+	 * @apiName moveMenu
+	 * @apiGroup Menu
+	 * @apiParam (PathVariable) {String} dragMenuId 拖动的菜单 id
+	 * @apiParam (PathVariable) {String} targetMenuId 目标菜单 id
+	 * @apiParam (PathVariable) {Number} position 位置 -1 目标菜单前 0 目标菜单中 1 目标菜单后
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@Transactional
 	@RequestMapping(path = "/menu/move/{drageMenuId}/{targetMenuId}/{position}", method = RequestMethod.POST)
 	public Result<?> move(@PathVariable("drageMenuId") String drageMenuId,
@@ -195,22 +291,117 @@ public class MenuController {
 		return DefaultResult.newResult();
 	}
 
+	/**
+	 * @api {get} /menu/{id} 查询指定 id 的菜单
+	 * @apiName getMenuById
+	 * @apiGroup Menu
+	 * @apiParam (PathVariable) {String} id 菜单 id
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object} payload 新建的菜单
+	 * @apiSuccess (Success) {String} payload.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiSuccess (Success) {String} payload.createTime 创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.GET)
 	public Result<Menu> findOne(@PathVariable String id) {
 		return DefaultResult.newResult(
 				FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.MENU_NOT_EXIST));
 	}
 
+	/**
+	 * @api {get} /menus 查询菜单
+	 * @apiName getMenus
+	 * @apiGroup Menu
+	 * @apiParam (QueryString) {Number} [page=0] 页码
+	 * @apiParam (QueryString) {Number} [size=10] 每页记录数
+	 * @apiParam (QueryString) {String} [name] 菜单名称
+	 * @apiParam (QueryString) {Number} [level] 菜单层次
+	 * @apiParam (QueryString) {String} [parentMenuId] 父菜单 id
+	 * @apiParam (QueryString) {String} [functionCode] 功能码
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Number} payload.totalPages 总页数
+	 * @apiSuccess (Success) {Number} payload.totalElements 总记录数
+	 * @apiSuccess (Success) {Number} payload.numberOfElements 当前记录数
+	 * @apiSuccess (Success) {Object[]} payload.content 菜单列表
+	 * @apiSuccess (Success) {String} payload.content.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.content.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.content.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.content.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.content.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.content.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.content.remark 备注
+	 * @apiSuccess (Success) {String} payload.content.createTime 创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menus", method = RequestMethod.GET)
 	public Result<Page<Menu>> find(@RequestParam int page, @RequestParam int size, QueryMenuSpec spec) {
 		return DefaultResult.newResult(menuRepository.findAll(spec.toSpecification(), PageRequest.of(page, size)));
 	}
 
+	/**
+	 * @api {get} /portal/functions 查询功能
+	 * @apiName getFunctions
+	 * @apiGroup Menu
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object[]} payload 功能列表
+	 * @apiSuccess (Success) {String} payload.id 功能 id
+	 * @apiSuccess (Success) {String} payload.serviceId 归属系统
+	 * @apiSuccess (Success) {String} payload.code 功能码
+	 * @apiSuccess (Success) {String} payload.name 功能名称
+	 * @apiSuccess (Success) {String} payload.type 类型 'M' 菜单 'O' 操作
+	 * @apiSuccess (Success) {String} payload.action 动作
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/portal/functions", method = RequestMethod.GET)
 	public Result<List<Function>> findFunctions() {
 		return DefaultResult.newResult(authorityService.fetchFunctions());
 	}
 
+	/**
+	 * @api {get} /menu/tree 查询菜单树
+	 * @apiDescription 查询所有的菜单并按照树型结构组织
+	 * @apiName getMenuTree
+	 * @apiGroup Menu
+	 * @apiSuccess (Success) {Boolean} success 业务成功标识 <code>true</code>
+	 * @apiSuccess (Success) {String} responseCode 响应码 'SC0000'
+	 * @apiSuccess (Success) {Object[]} payload 菜单列表
+	 * @apiSuccess (Success) {String} payload.id 菜单 id
+	 * @apiSuccess (Success) {String} payload.name 菜单名称
+	 * @apiSuccess (Success) {Number} payload.level 菜单层级
+	 * @apiSuccess (Success) {Number} payload.sequence 菜单序号
+	 * @apiSuccess (Success) {String} payload.functionCode 对应的功能码
+	 * @apiSuccess (Success) {String} payload.leaf 是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.remark 备注
+	 * @apiSuccess (Success) {String} payload.createTime 创建时间
+	 * @apiSuccess (Success) {Object[]} payload.children 子菜单
+	 * @apiSuccess (Success) {String} payload.children.id 子菜单 id
+	 * @apiSuccess (Success) {String} payload.children.name 子菜单名称
+	 * @apiSuccess (Success) {Number} payload.children.level 子菜单层级
+	 * @apiSuccess (Success) {Number} payload.children.sequence 子菜单序号
+	 * @apiSuccess (Success) {String} payload.children.functionCode 子菜单对应的功能码
+	 * @apiSuccess (Success) {String} payload.children.leaf 子菜单是否为叶子结点
+	 * @apiSuccess (Success) {String} payload.children.remark 子菜单备注
+	 * @apiSuccess (Success) {String} payload.children.createTime 子菜单创建时间
+	 * @apiError (Error) {Boolean} success 业务成功标识 <code>false</code>
+	 * @apiError (Error) {String} responseCode 错误码
+	 * @apiError (Error) {String} responseMessage 错误消息
+	 */
 	@RequestMapping(path = "/menus/tree", method = RequestMethod.GET)
 	public Result<List<Menu>> menuTree() {
 		List<Menu> menus = menuRepository.findAll();
