@@ -52,7 +52,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Value ("${token.key}")
 	private String key;
 	
-	@Value ("${token.sessionTimeOut:1200000}")
+	@Value ("${session.timeout:1200000}")
 	private Long sessionTimeOut;
 	
 	private SecretKey secretKey = null;

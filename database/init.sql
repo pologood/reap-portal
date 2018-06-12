@@ -1,6 +1,7 @@
 -- 参数
 INSERT INTO CONFIG (ID, APPLICATION, PROFILE, LABEL, NAME, VALUE) VALUES ('r-p.p.d.s.port', 'reap-portal', 'prd', 'default', 'server.port', '8081');
 INSERT INTO CONFIG (ID, APPLICATION, PROFILE, LABEL, NAME, VALUE) VALUES ('r-p.p.d.t.key', 'reap-portal', 'prd', 'default', 'token.key', '123456');
+INSERT INTO CONFIG (ID, APPLICATION, PROFILE, LABEL, NAME, VALUE) VALUES ('r-p.p.d.t.s.timeout', 'reap-portal', 'prd', 'default', 'session.timeout', '1200000');
 
 -- 路由规则
 INSERT INTO ROUTE VALUES('reap-portal', 'reap-portal' ,'/apis/reap-portal/**' ,'reap-portal' ,null ,null);
