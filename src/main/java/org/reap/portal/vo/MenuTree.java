@@ -43,14 +43,13 @@ public class MenuTree {
 	public MenuTree(List<Menu> menus, Map<String, Function> functionMap) {
 		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		menus.stream().forEach(m -> {
+			if (functionMap.containsKey(m.getFunctionCode())) {
+				m.setFunction(functionMap.get(m.getFunctionCode()));
+			}
 			if (m.getParent() != null) {
 				menuMapping.get(m.getParent().getId()).addChildren(m);
 			}
-			if (m.isLeaf()) {
-				if (functionMap.containsKey(m.getFunctionCode())) {
-					m.setFunction(functionMap.get(m.getFunctionCode()));
-				}
-			}
+
 		});
 		this.menus = menus.stream().filter(Menu::isRoot).filter(Menu::containsLeafChildren).sorted().collect(
 				Collectors.toList());

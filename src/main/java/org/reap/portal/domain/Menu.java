@@ -106,7 +106,8 @@ public class Menu implements Comparable<Menu> {
 	}
 
 	public boolean containsLeafChildren() {
-		if (this.isLeaf()) {
+		// 叶子节点并且功能不为空
+		if (this.isLeaf() && this.getFunction() != null) {
 			return true;
 		}
 		new ArrayList<>(childrens).stream().forEach((c) -> {
@@ -156,12 +157,11 @@ public class Menu implements Comparable<Menu> {
 	public boolean isRoot() {
 		return null == parent;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
 
-	
 	public void setId(String id) {
 		this.id = id;
 	}
