@@ -37,6 +37,8 @@ import org.reap.portal.common.Constants;
 public class Org {
 
 	private String id;
+	
+	private String code;
 
 	private String name;
 
@@ -102,5 +104,13 @@ public class Org {
 
 	public void setLeaf(String leaf) {
 		this.leaf = leaf;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }
