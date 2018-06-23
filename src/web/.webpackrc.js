@@ -3,7 +3,9 @@ console.log()
 const publicPath = process.env.NODE_ENV === 'development' ? '/' : './'
 export default {
   entry: 'src/index.js',
-  extraBabelPlugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }]],
+  extraBabelPlugins: [
+    ['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }],
+  ],
   env: {
     development: {
       extraBabelPlugins: ['dva-hmr'],
