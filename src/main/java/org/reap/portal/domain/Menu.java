@@ -30,20 +30,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.reap.portal.common.Constants;
 import org.reap.portal.vo.Function;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author 7cat
@@ -53,21 +46,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Menu implements Comparable<Menu> {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GeneratedValue
 	private String id;
 
-	@Column(nullable = false)
 	private String name;
 
-	@ManyToOne
-	@JsonIgnore
-	private Menu parent;
+	private String parentId;
 
-	@Column(nullable = false)
 	private Integer level;
 
-	@Column(nullable = false)
 	private Integer sequence;
 
 	private String functionCode;
@@ -76,7 +63,6 @@ public class Menu implements Comparable<Menu> {
 
 	private String remark;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;
 
 	@Transient
@@ -84,6 +70,9 @@ public class Menu implements Comparable<Menu> {
 
 	@Transient
 	private Function function;
+	
+	@Transient
+	private Menu parent;
 
 	public void addChildren(Menu menu) {
 		childrens.add(menu);
@@ -91,6 +80,10 @@ public class Menu implements Comparable<Menu> {
 
 	public void addChildrens(List<Menu> menus) {
 		childrens.addAll(menus);
+	}
+	
+	public void setParent(Menu parent) {
+		this.parent = parent;
 	}
 
 	public List<Menu> getChildrens() {
@@ -107,7 +100,7 @@ public class Menu implements Comparable<Menu> {
 
 	public boolean containsLeafChildren() {
 		// 叶子节点并且功能不为空
-		if (this.isLeaf() && this.getFunction() != null) {
+		if (this.isLeafMenu() && this.getFunction() != null) {
 			return true;
 		}
 		new ArrayList<>(childrens).stream().forEach((c) -> {
@@ -155,7 +148,7 @@ public class Menu implements Comparable<Menu> {
 	}
 
 	public boolean isRoot() {
-		return null == parent;
+		return null == parentId;
 	}
 
 	public String getId() {
@@ -182,7 +175,7 @@ public class Menu implements Comparable<Menu> {
 		this.functionCode = functionCode;
 	}
 
-	public boolean isLeaf() {
+	public boolean isLeafMenu() {
 		return Constants.MENU_IS_LEAF.equals(leaf);
 	}
 
@@ -193,15 +186,7 @@ public class Menu implements Comparable<Menu> {
 	public void setLeaf(String leaf) {
 		this.leaf = leaf;
 	}
-
-	public Menu getParent() {
-		return parent;
-	}
-
-	public void setParent(Menu parent) {
-		this.parent = parent;
-	}
-
+	 
 	public Integer getLevel() {
 		return level;
 	}
@@ -234,8 +219,21 @@ public class Menu implements Comparable<Menu> {
 		this.createTime = createTime;
 	}
 
+	public String getParentId() {
+		return parentId;
+	}
+
+	
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	
+	public void setChildrens(Set<Menu> childrens) {
+		this.childrens = childrens;
+	}
+
 	public String getParentName() {
 		return parent == null ? null : parent.getName();
 	}
-
 }

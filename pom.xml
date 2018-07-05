@@ -45,6 +45,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.reap</groupId>
+			<artifactId>spring-boot-starter-data-mybatis</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.reap</groupId>
 			<artifactId>reap-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -137,13 +142,13 @@
 		</plugins>
 	</build>
 	<repositories>
-        <repository>
-            <id>reap-maven-repository</id>
-            <url>https://raw.github.com/reap-platform/reap-maven-repository/master/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
+		<repository>
+			<id>reap-maven-repository</id>
+			<url>https://raw.github.com/reap-platform/reap-maven-repository/master/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>

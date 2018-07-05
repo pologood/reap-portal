@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.reap.portal.common.Fields;
 import org.reap.portal.domain.Menu;
 import org.reap.portal.domain.MenuRepository;
+import org.reap.portal.domain.UserFavFunctionRepository;
 import org.reap.portal.domain.UserSetting;
 import org.reap.portal.domain.UserSettingRepository;
 import org.reap.portal.service.AuthorityService;
@@ -64,6 +65,9 @@ public class DefaultAuthorityService implements AuthorityService {
 	
 	@Autowired
 	private UserSettingRepository userSettingRepository;
+
+	@Autowired
+	private UserFavFunctionRepository userFavFunctionRepository;
 	
 	@Autowired
     RestTemplate restTemplate;
@@ -90,11 +94,12 @@ public class DefaultAuthorityService implements AuthorityService {
 		List<Menu> menus = menuRepository.findAll();
 		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		for (Menu m : menus) {
-			if (m.getParent() != null) {
-				menuMapping.get(m.getParent().getId()).addChildren(m);
+			if (m.getParentId() != null) {
+				menuMapping.get(m.getParentId()).addChildren(m);
+				m.setParent(menuMapping.get(m.getParentId()));
 			}
 		}
-		return menus.stream().filter((m) -> m.getParent() == null).sorted(Comparator.comparing(Menu::getSequence)).collect(
+		return menus.stream().filter(m -> m.getParentId() == null).sorted(Comparator.comparing(Menu::getSequence)).collect(
 				Collectors.toList());
 	}
 
@@ -130,6 +135,7 @@ public class DefaultAuthorityService implements AuthorityService {
 		if(setting == null)
 			return null;
 		setting.setHomeFunction(functions.stream().filter((f) -> f.getCode().equals(setting.getHomeFunctionCode())).findFirst().orElse(null));
+		setting.setFavFunctions(userFavFunctionRepository.findByUserSettingId(setting.getId()));
 		setting.getFavFunctions().forEach(
 				favFunction -> 
 					favFunction.setFunction(functions.stream().filter((f) -> f.getCode().equals(favFunction.getFunctionCode())).findFirst().orElse(null))

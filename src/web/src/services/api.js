@@ -13,7 +13,7 @@ export async function menuTree() {
 }
 
 export async function menus(params) {
-  return request(`/apis/reap-portal/menus?${stringify(params)}`, { method: 'GET' });
+  return request(`/apis/reap-portal/menus?${stringify(params,{ skipNulls: true })}`, { method: 'GET' });
 }
 
 export async function functions() {

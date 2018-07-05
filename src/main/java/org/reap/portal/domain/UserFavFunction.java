@@ -1,17 +1,12 @@
 
 package org.reap.portal.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.reap.portal.vo.Function;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author hehaiwei
@@ -21,16 +16,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserFavFunction {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GeneratedValue
 	private String id;
 
-	@Column
 	private String functionCode;
 
-	@ManyToOne
-	@JsonIgnore
-	private UserSetting userSetting;
+	private String userSettingId;
 
 	@Transient
 	private Function function;
@@ -59,11 +50,11 @@ public class UserFavFunction {
 		this.functionCode = functionCode;
 	}
 
-	public UserSetting getUserSetting() {
-		return userSetting;
+	public String getUserSettingId() {
+		return userSettingId;
 	}
 
-	public void setUserSetting(UserSetting userSetting) {
-		this.userSetting = userSetting;
+	public void setUserSettingId(String userSettingId) {
+		this.userSettingId = userSettingId;
 	}
 }

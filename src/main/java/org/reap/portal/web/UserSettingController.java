@@ -24,6 +24,7 @@
 package org.reap.portal.web;
 
 import org.reap.portal.common.ErrorCodes;
+import org.reap.portal.domain.UserFavFunctionRepository;
 import org.reap.portal.domain.UserSetting;
 import org.reap.portal.domain.UserSettingRepository;
 import org.reap.support.DefaultResult;
@@ -47,6 +48,9 @@ public class UserSettingController {
 
 	@Autowired
 	private UserSettingRepository userSettingRepository;
+	
+	@Autowired
+	private UserFavFunctionRepository userFavFunctionRepository;
 
 	/** @apiDefine UserSetting 用户设置 */
 
@@ -102,6 +106,8 @@ public class UserSettingController {
 		UserSetting persisted = FunctionalUtils.orElseThrow(userSettingRepository.findById(userSetting.getId()),
 				ErrorCodes.USER_SETTING_NOT_EXISTS);
 		persisted.setHomeFunctionCode(userSetting.getHomeFunctionCode());
+		userFavFunctionRepository.deleteByUserSettingId(userSetting.getId());
+		userFavFunctionRepository.saveAll(userSetting.getFavFunctions());
 		persisted.setFavFunctions(userSetting.getFavFunctions());
 		return DefaultResult.newResult(userSettingRepository.save(persisted));
 	}

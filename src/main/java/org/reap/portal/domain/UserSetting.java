@@ -1,20 +1,13 @@
 
 package org.reap.portal.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.reap.portal.vo.Function;
 
 /**
@@ -25,11 +18,9 @@ import org.reap.portal.vo.Function;
 public class UserSetting {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GeneratedValue
 	private String id;
 
-	@Column(unique = true, nullable = false)
 	private String userId;
 
 	private String homeFunctionCode;
@@ -37,13 +28,8 @@ public class UserSetting {
 	@Transient
 	private Function homeFunction;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@NotFound(action = NotFoundAction.IGNORE)
-	private List<UserFavFunction> favFunctions = new ArrayList<UserFavFunction>();
-
-	public void addFavFunctions(UserFavFunction favFunction) {
-		favFunctions.add(favFunction);
-	}
+	@Transient
+	private List<UserFavFunction> favFunctions;
 
 	public void setHomeFunction(Function homeFunction) {
 		this.homeFunction = homeFunction;
@@ -78,14 +64,14 @@ public class UserSetting {
 	}
 
 	public List<UserFavFunction> getFavFunctions() {
+		if (null != favFunctions) {
+			favFunctions.stream().forEach(u -> u.setUserSettingId(this.getId()));
+		}
 		return favFunctions;
 	}
 
 	public void setFavFunctions(List<UserFavFunction> favFunctions) {
 		this.favFunctions = favFunctions;
-		for (UserFavFunction f : favFunctions) {
-			f.setUserSetting(this);
-		}
 	}
 
 }

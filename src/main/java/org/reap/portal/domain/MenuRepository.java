@@ -25,16 +25,15 @@ package org.reap.portal.domain;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.mybatis.repository.support.MybatisRepository;
 
-public interface MenuRepository extends JpaRepository<Menu, String>, JpaSpecificationExecutor<Menu> {
+public interface MenuRepository extends MybatisRepository<Menu, String> {
 
-	List<Menu> findByParent(Menu parent);
+	List<Menu> findByParentId(String parentId);
 
-	int countByParent(Menu parent);
+	int countByParentId(String parentId);
 
-	void deleteByParent(Menu menu);
+	void deleteByParentId(String parentId);
 
 	boolean existsById(String id);
 

@@ -47,6 +47,8 @@ public final class Fields {
 	
 	public static final String SEQUENCE = "sequence";
 
+	public static final String LEAF = "leaf";
+	
 	public static final String LEVEL = "level";
 
 	public static final String PAGE = "page";
@@ -55,3 +57,5 @@ public final class Fields {
 	
 	public static final String TOKEN = "token";
 }
+
+

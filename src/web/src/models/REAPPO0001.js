@@ -8,7 +8,7 @@ const { notification: { error } } = feedback;
 
 function menusSpec(state) {
   return {
-    parentMenuId: state.selected && state.selected.id,
+    parentId: state.selected && state.selected.id,
     size: state.page && state.page.size,
     page: state.page && state.page.number,
   };
@@ -58,7 +58,7 @@ export default {
         if (selected.leaf !== 'Y') {
           yield put({
             type: 'menus',
-            parentMenuId: selected && selected.id,
+            parentId: selected && selected.id,
             page: DEFAULT_PAGE_NUMBER,
             size: DEFAULT_PAGE_SIZE,
           });
@@ -67,7 +67,7 @@ export default {
       } else {
         yield put({
           type: 'menus',
-          parentMenuId: selected && selected.id,
+          parentId: selected && selected.id,
           page: DEFAULT_PAGE_NUMBER,
           size: DEFAULT_PAGE_SIZE,
         });
@@ -90,7 +90,7 @@ export default {
       const params = {
         size,
         page,
-        parentMenuId: state.selected && state.selected.id,
+        parentId: state.selected && state.selected.id,
         ...state.search,
       };
       const result = yield call(menus, params);

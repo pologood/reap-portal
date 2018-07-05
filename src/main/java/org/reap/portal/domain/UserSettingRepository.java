@@ -25,9 +25,9 @@ package org.reap.portal.domain;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mybatis.repository.support.MybatisRepository;
 
-public interface UserSettingRepository extends JpaRepository<UserSetting, String> {
+public interface UserSettingRepository extends MybatisRepository<UserSetting, String> {
 
 	Optional<UserSetting> findByUserId(String userId);
 }

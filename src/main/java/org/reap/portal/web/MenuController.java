@@ -34,18 +34,23 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.reap.portal.common.Constants;
 import org.reap.portal.common.ErrorCodes;
+import org.reap.portal.common.Fields;
 import org.reap.portal.domain.Menu;
 import org.reap.portal.domain.MenuRepository;
 import org.reap.portal.service.AuthorityService;
 import org.reap.portal.vo.Function;
-import org.reap.portal.vo.QueryMenuSpec;
 import org.reap.support.DefaultResult;
 import org.reap.support.Result;
 import org.reap.util.Assert;
 import org.reap.util.FunctionalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,7 +69,7 @@ public class MenuController {
 	private AuthorityService authorityService;
 
 	/** @apiDefine Menu 菜单维护 */
-	
+
 	/**
 	 * @api {post} /menu/{id} 创建子菜单
 	 * @apiName createSubMenu
@@ -93,10 +98,10 @@ public class MenuController {
 	public Result<Menu> create(@RequestBody Menu menu, @PathVariable String id) {
 		validate(menu);
 		Menu parent = FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.PARENT_MENU_NOT_EXIST);
-		Assert.isTrue(!parent.isLeaf(), ErrorCodes.LEAF_MENU_CAN_NOT_BE_PARENT);
+		Assert.isTrue(!parent.isLeafMenu(), ErrorCodes.LEAF_MENU_CAN_NOT_BE_PARENT);
 		menu.setLevel(parent.getLevel() + 1);
-		menu.setParent(parent);
-		menu.setSequence(menuRepository.countByParent(parent) + 1);
+		menu.setParentId(parent.getId());
+		menu.setSequence(menuRepository.countByParentId(parent.getId()) + 1);
 		menu.setCreateTime(new Date());
 		return DefaultResult.newResult(menuRepository.save(menu));
 	}
@@ -129,7 +134,7 @@ public class MenuController {
 		validate(menu);
 		menu.setLevel(1);
 		menu.setCreateTime(new Date());
-		menu.setSequence(menuRepository.countByParent(null) + 1);
+		menu.setSequence(menuRepository.countByParentId(null) + 1);
 		return DefaultResult.newResult(menuRepository.save(menu));
 	}
 
@@ -149,7 +154,7 @@ public class MenuController {
 	public Result<?> delete(@PathVariable String id) {
 		Menu menu = FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.MENU_NOT_EXIST);
 		if (menu.isRoot()) {
-			menuRepository.deleteByParent(menu);
+			menuRepository.deleteByParentId(id);
 		}
 		menuRepository.delete(menu);
 		return DefaultResult.newResult();
@@ -212,25 +217,25 @@ public class MenuController {
 		Menu dragMenu = FunctionalUtils.orElseThrow(menuRepository.findById(drageMenuId), ErrorCodes.MENU_NOT_EXIST);
 
 		if (position == Constants.MOVE_MENU_POSITION_IN) {
-			if (!targetMenu.isLeaf()) {
-				List<Menu> sourceMenuList = menuRepository.findByParent(dragMenu.getParent()).stream().filter(
+			if (!targetMenu.isLeafMenu()) {
+				List<Menu> sourceMenuList = menuRepository.findByParentId(dragMenu.getParentId()).stream().filter(
 						m -> !m.getId().equals(dragMenu.getId())).sorted(
 								Comparator.comparing(Menu::getSequence)).collect(Collectors.toList());
 				menuRepository.saveAll(sourceMenuList);
-				List<Menu> menus = menuRepository.findByParent(targetMenu);
+				List<Menu> menus = menuRepository.findByParentId(targetMenu.getId());
 				for (int i = 0; i < sourceMenuList.size(); i++) {
 					sourceMenuList.get(i).setSequence(i + 1);
 				}
-				dragMenu.setParent(targetMenu);
+				dragMenu.setParentId(targetMenu.getId());
 				dragMenu.setSequence(menus.size() + 1);
 				menuRepository.save(dragMenu);
 			}
 		}
 		else {
 			// 同级菜单移动
-			if (ObjectUtils.equals(targetMenu.getParent(), dragMenu.getParent())) {
+			if (ObjectUtils.equals(targetMenu.getParentId(), dragMenu.getParentId())) {
 				List<Menu> targetMenus = new ArrayList<>();
-				menuRepository.findByParent(dragMenu.getParent()).stream().filter(
+				menuRepository.findByParentId(dragMenu.getParentId()).stream().filter(
 						m -> !m.getId().equals(dragMenu.getId())).sorted(
 								Comparator.comparing(Menu::getSequence)).forEach((m) -> {
 									if (m.getId().equals(targetMenu.getId())) {
@@ -255,7 +260,7 @@ public class MenuController {
 			}
 			// 移动到其它菜单下
 			else {
-				List<Menu> sourceMenuList = menuRepository.findByParent(dragMenu.getParent()).stream().filter(
+				List<Menu> sourceMenuList = menuRepository.findByParentId(dragMenu.getParentId()).stream().filter(
 						m -> !m.getId().equals(dragMenu.getId())).sorted(
 								Comparator.comparing(Menu::getSequence)).collect(Collectors.toList());
 				for (int i = 0; i < sourceMenuList.size(); i++) {
@@ -264,8 +269,8 @@ public class MenuController {
 				menuRepository.saveAll(sourceMenuList);
 
 				List<Menu> targetMenus = new ArrayList<>();
-				dragMenu.setParent(targetMenu.getParent());
-				menuRepository.findByParent(targetMenu.getParent()).stream().filter(
+				dragMenu.setParentId(targetMenu.getParentId());
+				menuRepository.findByParentId(targetMenu.getParentId()).stream().filter(
 						m -> !m.getId().equals(dragMenu.getId())).sorted(
 								Comparator.comparing(Menu::getSequence)).forEach(m -> {
 									if (m.getId().equals(targetMenu.getId())) {
@@ -346,8 +351,14 @@ public class MenuController {
 	 * @apiError (Error) {String} responseMessage 错误消息
 	 */
 	@RequestMapping(path = "/menus", method = RequestMethod.GET)
-	public Result<Page<Menu>> find(@RequestParam int page, @RequestParam int size, QueryMenuSpec spec) {
-		return DefaultResult.newResult(menuRepository.findAll(spec.toSpecification(), PageRequest.of(page, size)));
+	public Result<Page<Menu>> find(@RequestParam int page, @RequestParam int size, Menu spec) {
+		Example<Menu> example = Example.of(spec,
+				ExampleMatcher.matching().withIgnoreNullValues().withIgnorePaths(Fields.LEAF).withStringMatcher(
+						StringMatcher.CONTAINING));
+		PageRequest pageRequest = (StringUtils.isEmpty(spec.getParentId()))
+				? PageRequest.of(page, size, Sort.by(Direction.ASC, Fields.ID))
+				: PageRequest.of(page, size, Sort.by(Direction.ASC, Fields.SEQUENCE));
+		return DefaultResult.newResult(menuRepository.findAll(example, pageRequest));
 	}
 
 	/**
@@ -407,16 +418,16 @@ public class MenuController {
 		List<Menu> menus = menuRepository.findAll();
 		Map<String, Menu> menuMapping = menus.stream().collect(Collectors.toMap(Menu::getId, m -> m));
 		for (Menu m : menus) {
-			if (m.getParent() != null) {
-				menuMapping.get(m.getParent().getId()).addChildren(m);
+			if (m.getParentId() != null) {
+				menuMapping.get(m.getParentId()).addChildren(m);
 			}
 		}
-		return DefaultResult.newResult(menus.stream().filter((m) -> m.getParent() == null).sorted(
+		return DefaultResult.newResult(menus.stream().filter(m -> m.getParentId() == null).sorted(
 				Comparator.comparing(Menu::getSequence)).collect(Collectors.toList()));
 	}
 
 	private void validate(Menu menu) {
-		Assert.isTrue(!(menu.isLeaf() && StringUtils.isEmpty(menu.getFunctionCode())),
+		Assert.isTrue(!(menu.isLeafMenu() && StringUtils.isEmpty(menu.getFunctionCode())),
 				ErrorCodes.LEAF_MENU_MUST_CONTAINS_FUNCTIONS);
 		if (StringUtils.isNotEmpty(menu.getFunctionCode())) {
 			Assert.isTrue(authorityService.fetchFunctions().stream().anyMatch(

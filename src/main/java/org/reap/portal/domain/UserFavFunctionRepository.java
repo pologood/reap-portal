@@ -23,8 +23,13 @@
 
 package org.reap.portal.domain;
 
+import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mybatis.repository.support.MybatisRepository;
 
-public interface UserFavFunctionRepository extends JpaRepository<UserFavFunction, Long> {
+public interface UserFavFunctionRepository extends MybatisRepository<UserFavFunction, String> {
+
+	List<UserFavFunction> findByUserSettingId(String userSettingId);
+	
+	void deleteByUserSettingId(String settingId);
 }

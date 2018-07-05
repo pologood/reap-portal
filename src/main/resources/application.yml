@@ -1,3 +1,8 @@
+spring: 
+  data:
+    jpa:
+      enabled: false
+
 api:
   logon: http://reap-rbac/authentication/
   fetchFunctions: http://reap-rbac/functions/all

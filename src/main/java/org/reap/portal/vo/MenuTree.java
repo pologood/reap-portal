@@ -46,8 +46,8 @@ public class MenuTree {
 			if (functionMap.containsKey(m.getFunctionCode())) {
 				m.setFunction(functionMap.get(m.getFunctionCode()));
 			}
-			if (m.getParent() != null) {
-				menuMapping.get(m.getParent().getId()).addChildren(m);
+			if (m.getParentId() != null) {
+				menuMapping.get(m.getParentId()).addChildren(m);
 			}
 
 		});
