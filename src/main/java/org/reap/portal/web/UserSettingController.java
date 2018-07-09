@@ -27,7 +27,6 @@ import org.reap.portal.common.ErrorCodes;
 import org.reap.portal.domain.UserFavFunctionRepository;
 import org.reap.portal.domain.UserSetting;
 import org.reap.portal.domain.UserSettingRepository;
-import org.reap.support.DefaultResult;
 import org.reap.support.Result;
 import org.reap.util.FunctionalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,7 @@ public class UserSettingController {
 	 */
 	@RequestMapping(path = "/setting", method = RequestMethod.POST)
 	public Result<UserSetting> create(@RequestBody UserSetting userSetting) {
-		return DefaultResult.newResult(userSettingRepository.save(userSetting));
+		return Result.newResult(userSettingRepository.save(userSetting));
 	}
 
 	/**
@@ -109,6 +108,6 @@ public class UserSettingController {
 		userFavFunctionRepository.deleteByUserSettingId(userSetting.getId());
 		userFavFunctionRepository.saveAll(userSetting.getFavFunctions());
 		persisted.setFavFunctions(userSetting.getFavFunctions());
-		return DefaultResult.newResult(userSettingRepository.save(persisted));
+		return Result.newResult(userSettingRepository.save(persisted));
 	}
 }

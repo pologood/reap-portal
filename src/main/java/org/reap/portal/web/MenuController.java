@@ -39,7 +39,6 @@ import org.reap.portal.domain.Menu;
 import org.reap.portal.domain.MenuRepository;
 import org.reap.portal.service.AuthorityService;
 import org.reap.portal.vo.Function;
-import org.reap.support.DefaultResult;
 import org.reap.support.Result;
 import org.reap.util.Assert;
 import org.reap.util.FunctionalUtils;
@@ -103,7 +102,7 @@ public class MenuController {
 		menu.setParentId(parent.getId());
 		menu.setSequence(menuRepository.countByParentId(parent.getId()) + 1);
 		menu.setCreateTime(new Date());
-		return DefaultResult.newResult(menuRepository.save(menu));
+		return Result.newResult(menuRepository.save(menu));
 	}
 
 	/**
@@ -135,7 +134,7 @@ public class MenuController {
 		menu.setLevel(1);
 		menu.setCreateTime(new Date());
 		menu.setSequence(menuRepository.countByParentId(null) + 1);
-		return DefaultResult.newResult(menuRepository.save(menu));
+		return Result.newResult(menuRepository.save(menu));
 	}
 
 	/**
@@ -157,7 +156,7 @@ public class MenuController {
 			menuRepository.deleteByParentId(id);
 		}
 		menuRepository.delete(menu);
-		return DefaultResult.newResult();
+		return Result.newResult();
 	}
 
 	/**
@@ -193,7 +192,7 @@ public class MenuController {
 		persisted.setLeaf(menu.getLeaf());
 		persisted.setFunctionCode(menu.getFunctionCode());
 		validate(persisted);
-		return DefaultResult.newResult(menuRepository.save(persisted));
+		return Result.newResult(menuRepository.save(persisted));
 	}
 
 	/**
@@ -293,7 +292,7 @@ public class MenuController {
 				menuRepository.saveAll(targetMenus);
 			}
 		}
-		return DefaultResult.newResult();
+		return Result.newResult();
 	}
 
 	/**
@@ -318,7 +317,7 @@ public class MenuController {
 	 */
 	@RequestMapping(path = "/menu/{id}", method = RequestMethod.GET)
 	public Result<Menu> findOne(@PathVariable String id) {
-		return DefaultResult.newResult(
+		return Result.newResult(
 				FunctionalUtils.orElseThrow(menuRepository.findById(id), ErrorCodes.MENU_NOT_EXIST));
 	}
 
@@ -358,7 +357,7 @@ public class MenuController {
 		PageRequest pageRequest = (StringUtils.isEmpty(spec.getParentId()))
 				? PageRequest.of(page, size, Sort.by(Direction.ASC, Fields.ID))
 				: PageRequest.of(page, size, Sort.by(Direction.ASC, Fields.SEQUENCE));
-		return DefaultResult.newResult(menuRepository.findAll(example, pageRequest));
+		return Result.newResult(menuRepository.findAll(example, pageRequest));
 	}
 
 	/**
@@ -381,7 +380,7 @@ public class MenuController {
 	 */
 	@RequestMapping(path = "/portal/functions", method = RequestMethod.GET)
 	public Result<List<Function>> findFunctions() {
-		return DefaultResult.newResult(authorityService.fetchFunctions());
+		return Result.newResult(authorityService.fetchFunctions());
 	}
 
 	/**
@@ -422,7 +421,7 @@ public class MenuController {
 				menuMapping.get(m.getParentId()).addChildren(m);
 			}
 		}
-		return DefaultResult.newResult(menus.stream().filter(m -> m.getParentId() == null).sorted(
+		return Result.newResult(menus.stream().filter(m -> m.getParentId() == null).sorted(
 				Comparator.comparing(Menu::getSequence)).collect(Collectors.toList()));
 	}
 

@@ -29,7 +29,6 @@ import org.reap.portal.service.SecurityService;
 import org.reap.portal.vo.MenuTree;
 import org.reap.portal.vo.Session;
 import org.reap.portal.vo.User;
-import org.reap.support.DefaultResult;
 import org.reap.support.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -143,6 +142,6 @@ public class LogonController {
 		MenuTree menuTree = authorityService.fetchUserMenuTree(user);
 		String token = securityService.generateToken(user);
 		UserSetting setting = authorityService.fetchUserSetting(user);
-		return DefaultResult.newResult(new Session(token, user, menuTree, setting));
+		return Result.newResult(new Session(token, user, menuTree, setting));
 	}
 }

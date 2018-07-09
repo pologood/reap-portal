@@ -24,7 +24,6 @@
 package org.reap.portal.web;
 
 import org.reap.portal.service.SecurityService;
-import org.reap.support.DefaultResult;
 import org.reap.support.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,7 +59,7 @@ public class AuthenticationController {
 	 */
 	@RequestMapping(path = "/token", method = RequestMethod.PUT)
 	public Result<String> verifyToken(@RequestParam String token) {
-		return DefaultResult.newResult(securityService.parseToken(token));
+		return Result.newResult(securityService.parseToken(token));
 	}
 
 }
