@@ -31,6 +31,8 @@ package org.reap.portal.common;
  */
 public final class Constants {
 
+	public static final String PORTAL_SCHEMA="REAP_PORTAL";
+	
 	public static final int MOVE_MENU_POSITION_BEFORE = -1;
 
 	public static final int MOVE_MENU_POSITION_IN = 0;

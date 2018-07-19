@@ -4,8 +4,10 @@ package org.reap.portal.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.reap.portal.common.Constants;
 import org.reap.portal.vo.Function;
 
 /**
@@ -13,6 +15,7 @@ import org.reap.portal.vo.Function;
  *
  */
 @Entity
+@Table(schema=Constants.PORTAL_SCHEMA)
 public class UserFavFunction {
 
 	@Id
